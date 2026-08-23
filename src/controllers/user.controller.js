@@ -25,7 +25,7 @@ const registerUser = asyncHandler(async (req, res) => {
   // expert way for multiple checks
 
   if (
-    [fullName, email, username, password].some((field) => field?.trim === "")
+    [fullName, email, username, password].some((field) => field?.trim() === "")
   ) {
     throw new ApiError(400, "All fields are required");
   }
@@ -40,15 +40,19 @@ const registerUser = asyncHandler(async (req, res) => {
 
   console.log(req.files);
 
-  const avatarLocalPath = req.fies?.avatar[0].path;
-  const coverImageLocalPath = req.files?.coverImage[0]?.path;
+  // SAFE EXTRACTION: Use optional chaining before accessing index [0]
+  const avatarLocalPath = req.files?.avatar?.[0]?.path;
+  const coverImageLocalPath = req.files?.coverImage?.[0]?.path;
 
+  // Validation remains the same
   if (!avatarLocalPath) {
     throw new ApiError(400, "Avatar file is required");
   }
 
+
   const avatar = await uploadOnCloudinary(avatarLocalPath);
   const coverImage = await uploadOnCloudinary(coverImageLocalPath);
+  
   if (!avatar) {
     throw new ApiError(400, "Avatar file is required");
   }

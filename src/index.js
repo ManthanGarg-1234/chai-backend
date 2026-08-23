@@ -1,9 +1,14 @@
 import dotenv from "dotenv"
 import connectDB from "./db/index.js"
 import { app } from "./app.js" // 👈 ADD THIS IMPORT LINE
+// Inside src/app.js or src/index.js
+import userRouter from "./routes/user.routes.js";
+
+// Change this from app.use("/users", userRouter) to:
+app.use("/api/v1/users", userRouter);
 
 dotenv.config({
-    path: './env'
+    path: './.env'
 })
 
 connectDB()
